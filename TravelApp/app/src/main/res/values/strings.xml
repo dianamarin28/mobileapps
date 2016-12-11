@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TravelApp</string>
+
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="remove_message">REMOVE CURRENT PLACE</string>
+    <string name="positive">YES</string>
+    <string name="negative">NO</string>
 </resources>

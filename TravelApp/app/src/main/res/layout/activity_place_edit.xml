@@ -24,7 +24,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
         android:ems="10"
         android:id="@+id/editCity"
         android:layout_marginTop="23dp"
@@ -35,11 +34,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:ems="10"
+        android:id="@+id/editRating"
+        android:layout_below="@+id/editCity"
+        android:layout_alignStart="@+id/editCity"
+        android:layout_marginTop="23dp" />
+
+    <Button
+        android:text="Update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:id="@+id/buttonUpdate"
+        android:layout_below="@+id/editRating"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonDelete"
+        android:layout_below="@+id/buttonUpdate"
+        android:layout_alignStart="@+id/buttonUpdate" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/editCountry"
-        android:layout_marginTop="61dp"
+        android:layout_marginTop="36dp"
         android:layout_below="@+id/editLabel"
-        android:layout_alignStart="@+id/editCity" />
+        android:layout_alignStart="@+id/editLabel" />
 
 </RelativeLayout>

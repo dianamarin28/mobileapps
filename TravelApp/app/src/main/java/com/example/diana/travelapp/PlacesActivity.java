@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -14,45 +17,22 @@ import java.util.List;
 import java.util.Map;
 
 public class PlacesActivity extends AppCompatActivity {
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places);
 
-        List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+        // list
+        DBRepo db = new DBRepo(getApplicationContext(), null);
+        Place[] places = db.getAllPlaces();
+        List<String> placesForList = new ArrayList<>();
+        for (Place p : places) {
+            placesForList.add(p.toString());
+        }
 
-        Map<String, String> entryData1 = new HashMap<>();
-        entryData1.put("country", "Romania");
-        entryData1.put("city", "Cluj-Napoca");
-        data.add(entryData1);
-
-        Map<String, String> entryData2 = new HashMap<>();
-        entryData2.put("country", "Germany");
-        entryData2.put("city", "Berlin");
-        data.add(entryData2);
-
-        Map<String, String> entryData3 = new HashMap<>();
-        entryData3.put("country", "Romania");
-        entryData3.put("city", "Sibiu");
-        data.add(entryData3);
-
-        Map<String, String> entryData4 = new HashMap<>();
-        entryData4.put("country", "France");
-        entryData4.put("city", "Paris");
-        data.add(entryData4);
-
-        Map<String, String> entryData5 = new HashMap<>();
-        entryData5.put("country", "Australia");
-        entryData5.put("city", "Sydney");
-        data.add(entryData5);
-
-        SimpleAdapter adapter = new SimpleAdapter(this, data,
-                android.R.layout.simple_list_item_2,
-                new String[] {"country", "city"},
-                new int[] {android.R.id.text1,
-                        android.R.id.text2});
-
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, placesForList);
         final ListView placesList = (ListView) findViewById(R.id.placesList);
         placesList.setAdapter(adapter);
 
@@ -60,12 +40,37 @@ public class PlacesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent editItem = new Intent(PlacesActivity.this, PlaceEditActivity.class);
-                Map<String, String> selectedFromList = (Map<String, String>) placesList.getItemAtPosition(i);
-                editItem.putExtra("country", selectedFromList.get("country"));
-                editItem.putExtra("city", selectedFromList.get("city"));
+                String[] item = placesList.getItemAtPosition(i).toString().split(" ");
+
+                editItem.putExtra("id", item[0]);
+                editItem.putExtra("country", item[1]);
+                editItem.putExtra("city", item[2]);
+                editItem.putExtra("rating", item[3]);
 
                 startActivity(editItem);
             }
         });
+
+        // go to add place activity
+        Button buttonList = (Button) findViewById(R.id.addPlaceButton);
+        buttonList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(PlacesActivity.this, PlaceAddActivity.class));
+            }
+        });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        DBRepo db = new DBRepo(getApplicationContext(), null);
+        Place[] places = db.getAllPlaces();
+        List<String> placesForList = new ArrayList<>();
+        for(Place p : places) {
+            placesForList.add(p.toString());
+        }
+        this.adapter.clear();
+        this.adapter.addAll(placesForList);
     }
 }

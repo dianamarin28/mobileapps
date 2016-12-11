@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".PlacesActivity" />
-        <activity android:name=".PlaceEditActivity"></activity>
+        <activity android:name=".PlaceEditActivity" />
+        <activity android:name=".PlaceAddActivity"></activity>
     </application>
 
 </manifest>
