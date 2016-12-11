@@ -10,6 +10,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
+
 public class PlaceEditActivity extends AppCompatActivity {
 
     @Override
@@ -31,6 +35,7 @@ public class PlaceEditActivity extends AppCompatActivity {
 
         final Context context = this;
 
+        // actions for update and delete buttons
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,5 +81,18 @@ public class PlaceEditActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+
+        // chart
+        GraphView chart = (GraphView) findViewById(R.id.chart);
+        DBRepo db = new DBRepo(getApplicationContext(), null);
+
+        DataPoint[] dataForChart = new DataPoint[10];
+        for (int i=0; i<10; i++) {
+            dataForChart[i] = new DataPoint(i, db.getRatingCount(i));
+        }
+
+        BarGraphSeries<DataPoint> series = new BarGraphSeries<>(dataForChart);
+
+        chart.addSeries(series);
     }
 }

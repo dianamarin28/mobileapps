@@ -118,4 +118,13 @@ public class DBRepo extends SQLiteOpenHelper {
         cursor.close();
         return count;
     }
+
+    public int getRatingCount(int rating) {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_PLACES + " WHERE " + COLUMN_RATING + " ='" + rating +"';";
+        Cursor cursor = db.rawQuery(query, null);
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
 }
