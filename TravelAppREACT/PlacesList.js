@@ -6,13 +6,17 @@ import {
   TouchableHighlight,
   AsyncStorage,
   Text,
-  View
+  View,
+    ScrollView,
+    Alert
 } from 'react-native';
 
 import Button from 'react-native-button';
 
 var update = require('react-addons-update');
 var _ = require('underscore-node');
+
+var alertMessage = 'Place cannot be empty!';
 
 class PlacesList extends Component {
 
@@ -46,20 +50,28 @@ class PlacesList extends Component {
 
     savePlace() {
         var placesList = this.state.places;
-        var newPlace = this.state.newPlace.split(" ");
-        placesList.push({country: newPlace[0], city: newPlace[1], rating:newPlace[2]});
-        this.setState({places: placesList});
-
-        try {
-            AsyncStorage.setItem('@placesList:key', JSON.stringify(placesList)).then((data) => {
-
-            });
-
-        } catch (error) {
-            // Error saving data
+        if (this.state.newPlace == "") {
+            Alert.alert(
+                'Error',
+                alertMessage,
+            )
         }
+        else {
+            var newPlace = this.state.newPlace.split(" ");
+            placesList.push({country: newPlace[0], city: newPlace[1], rating: newPlace[2]});
+            this.setState({places: placesList});
 
-        this.setState({newPlace: ''})
+            try {
+                AsyncStorage.setItem('@placesList:key', JSON.stringify(placesList)).then((data) => {
+
+                });
+
+            } catch (error) {
+                // Error saving data
+            }
+
+            this.setState({newPlace: ''})
+        }
     }
 
     delete(index) {
@@ -157,7 +169,9 @@ class PlacesList extends Component {
 				<Text style={styles.heading}>
 					Places:
 				</Text>
-                {l}
+                <ScrollView>
+                    {l}
+                </ScrollView>
 			</View>
         );
 	}

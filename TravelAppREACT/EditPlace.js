@@ -8,10 +8,12 @@ import {
   AsyncStorage,
   Text,
   View,
-  BackAndroid
+  BackAndroid,
+    Picker
 } from 'react-native';
 
 import Button from 'react-native-button';
+const Item = Picker.Item;
 
 class EditPlace extends Component {
 
@@ -47,10 +49,22 @@ class EditPlace extends Component {
           onChangeText={(text) => this.setState({cityLabel: text})}
           value={this.state.cityLabel}
         />
-        <TextInput style={{width: 70,height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(text) => this.setState({ratingLabel: text})}
-          value={this.state.ratingLabel.toString()}
-	/>
+
+          <Picker
+              style={styles.picker}
+              selectedValue={this.state.ratingLabel}
+              onValueChange={this.onValueChange.bind(this, 'ratingLabel')}>
+              <Item label="1" value="1" />
+              <Item label="2" value="2" />
+              <Item label="3" value="3" />
+              <Item label="4" value="4" />
+              <Item label="5" value="5" />
+              <Item label="6" value="6" />
+              <Item label="7" value="7" />
+              <Item label="8" value="8" />
+              <Item label="9" value="9" />
+              <Item label="10" value="10" />
+          </Picker>
 
         <Button onPress={ this.edit.bind(this) }>Save</Button>
         <Button onPress={ this.navigate.bind(this, "chartView") }>Chart</Button>
@@ -58,6 +72,12 @@ class EditPlace extends Component {
       </View>
     );
   }
+
+    onValueChange = (key: string, value: string) => {
+        const newState = {};
+        newState[key] = value;
+        this.setState(newState);
+    };
 }
 
 const styles = StyleSheet.create({
@@ -68,10 +88,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
         padding: 10,
         paddingTop: 80
-    },
-    chart: {
-        width: 20,
-        height: 10,
     },
     input: {
         height: 50,
@@ -106,6 +122,9 @@ const styles = StyleSheet.create({
     },
     loader: {
         marginTop: 20
+    },
+    picker: {
+        width: 100,
     }
 });
 
