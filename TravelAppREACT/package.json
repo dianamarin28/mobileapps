@@ -3,13 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "build": "(cd android/ && ./gradlew assembleDebug)",
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "bundle-android": "react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output android/app/src/main/assets/index.android.bundle --sourcemap-output android/app/src/main/assets/index.android.map --assets-dest android/app/src/main/res/"
   },
   "dependencies": {
     "react": "15.3.2",
     "react-native": "0.36.0",
-    "react-native-button": "^1.7.1"
+    "react-native-button": "^1.7.1",
+    "react-native-chart": "^1.0.8-beta"
   },
   "jest": {
     "preset": "jest-react-native"

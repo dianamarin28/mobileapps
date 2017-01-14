@@ -18,8 +18,9 @@ import {
 import Button from 'react-native-button';
 
 import EditPlace from './EditPlace';
-import PlacesList from './PlacesList';;
+import PlacesList from './PlacesList';
 import Root from './root';
+import ChartView from './chartView';
 
 
 export default class TravelAppREACT extends Component {
@@ -33,8 +34,11 @@ export default class TravelAppREACT extends Component {
 			return <PlacesList navigator={navigator} />
 		}
 		if(route.name == 'editPlace') {
-        		return <EditPlace navigator={navigator} place={route.data}/>
-     		}
+			return <EditPlace navigator={navigator} place={route.data} placeIndex={route.placeIndex} callback={route.callback}/>
+		}
+		if(route.name == 'chartView') {
+			return <ChartView navigator={navigator} />
+		}
 	}
 
 	render() {
