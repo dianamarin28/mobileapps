@@ -9,6 +9,10 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.example.diana.travelapp.serverUtils.Request;
+import com.example.diana.travelapp.serverUtils.RequestBuilder;
+import com.example.diana.travelapp.serverUtils.RequestTags;
+
 public class PlaceAddActivity extends AppCompatActivity {
 
     @Override
@@ -55,11 +59,22 @@ public class PlaceAddActivity extends AppCompatActivity {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DBRepo db = new DBRepo(getApplicationContext(), null);
-                int lastID = db.getPlacesCount();
-                Place place = new Place(lastID++, country.getText().toString(), city.getText().toString(), Integer.parseInt(rating.getText().toString()));
-                boolean isSaved = db.addPlace(place);
-                if(isSaved){
+//                LOCAL STORAGE
+//                DBRepo db = new DBRepo(getApplicationContext(), null);
+//                int lastID = db.getPlacesCount();
+//                Place place = new Place(lastID++, country.getText().toString(), city.getText().toString(), Integer.parseInt(rating.getText().toString()));
+//                boolean isSaved = db.addPlace(place);
+
+//                REMOTE STORAGE
+                String URL = new RequestBuilder().setType(RequestTags.TYPE_REPOSITORY)
+                        .setAction(RequestTags.ACTION_INSERT)
+                        .setParam(RequestTags.KEY_NAME, country.getText().toString())
+                        .setParam(RequestTags.KEY_TYPE, city.getText().toString())
+                        .setParam(RequestTags.KEY_YEAR, rating.getText().toString())
+                        .build();
+                Request request = new Request();
+                String isSaved = request.makeRequest(URL);
+                if(isSaved != null){
                     Toast toast = Toast.makeText(getApplicationContext(), "Saved!", Toast.LENGTH_LONG);
                     toast.show();
                 } else {

@@ -10,9 +10,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.diana.travelapp.serverUtils.Request;
+import com.example.diana.travelapp.serverUtils.RequestBuilder;
+import com.example.diana.travelapp.serverUtils.RequestTags;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class PlaceEditActivity extends AppCompatActivity {
 
@@ -39,12 +45,25 @@ public class PlaceEditActivity extends AppCompatActivity {
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DBRepo db = new DBRepo(getApplicationContext(), null);
-                final int placeID = Integer.parseInt(extras.getString("id"));
+                // LOCAL STORAGE
+//                final DBRepo db = new DBRepo(getApplicationContext(), null);
+//                final int placeID = Integer.parseInt(extras.getString("id"));
+//
+//                Place updatedPlace = new Place(placeID, editCountry.getText().toString(), editCity.getText().toString(), Integer.parseInt(editRating.getText().toString()));
+//                boolean isUpdated = db.addPlace(updatedPlace);
 
-                Place updatedPlace = new Place(placeID, editCountry.getText().toString(), editCity.getText().toString(), Integer.parseInt(editRating.getText().toString()));
-                boolean isUpdated = db.addPlace(updatedPlace);
-                if(isUpdated){
+                // RMEOTE STORAGE
+                String URL = new RequestBuilder().setType(RequestTags.TYPE_REPOSITORY)
+                        .setAction(RequestTags.ACTION_UPDATE)
+                        .setParam(RequestTags.KEY_ID, extras.getString("id"))
+                        .setParam(RequestTags.KEY_NAME, editCountry.getText().toString())
+                        .setParam(RequestTags.KEY_TYPE, editCity.getText().toString())
+                        .setParam(RequestTags.KEY_YEAR, editRating.getText().toString())
+                        .build();
+                Request request = new Request();
+                String isUpdated = request.makeRequest(URL);
+
+                if(isUpdated != null){
                     Toast toast = Toast.makeText(getApplicationContext(), "Updated!", Toast.LENGTH_LONG);
                     toast.show();
                 } else {
@@ -58,8 +77,9 @@ public class PlaceEditActivity extends AppCompatActivity {
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DBRepo db = new DBRepo(getApplicationContext(), null);
-                final int placeID = Integer.parseInt(extras.getString("id"));
+//                LOCAL STORAGE
+//                final DBRepo db = new DBRepo(getApplicationContext(), null);
+//                final int placeID = Integer.parseInt(extras.getString("id"));
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(R.string.are_you_sure) //
@@ -67,7 +87,18 @@ public class PlaceEditActivity extends AppCompatActivity {
                         .setPositiveButton(getString(R.string.positive), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();
-                                db.deletePlace(placeID);
+
+                                // LOCAL STORAGE
+//                                db.deletePlace(placeID);
+
+//                                REMOTE STORAGE
+                                String URL = new RequestBuilder().setType(RequestTags.TYPE_REPOSITORY)
+                                        .setAction(RequestTags.ACTION_DELETE)
+                                        .setParam(RequestTags.KEY_ID, extras.getString("id"))
+                                        .build();
+                                Request request = new Request();
+                                String isSaved = request.makeRequest(URL);
+
                                 Toast toast = Toast.makeText(getApplicationContext(), "Deleted!", Toast.LENGTH_LONG);
                                 toast.show();
                                 finish();
@@ -83,16 +114,48 @@ public class PlaceEditActivity extends AppCompatActivity {
         });
 
         // chart
-        GraphView chart = (GraphView) findViewById(R.id.chart);
-        DBRepo db = new DBRepo(getApplicationContext(), null);
+//        GraphView chart = (GraphView) findViewById(R.id.chart);
+//        DBRepo db = new DBRepo(getApplicationContext(), null);
+//
+//        DataPoint[] dataForChart = new DataPoint[10];
+//        for (int i=0; i<10; i++) {
+//            dataForChart[i] = new DataPoint(i, db.getRatingCount(i));
+//        }
+//
+//        BarGraphSeries<DataPoint> series = new BarGraphSeries<>(dataForChart);
+//
+//        chart.addSeries(series);
 
-        DataPoint[] dataForChart = new DataPoint[10];
-        for (int i=0; i<10; i++) {
-            dataForChart[i] = new DataPoint(i, db.getRatingCount(i));
+        int countRating5 = 0;
+        int countRating4 = 0;
+        int countRating3 = 0;
+        JSONArray places = Request.readRequest();
+        for(int i=0; i<places.length(); i++) {
+            try {
+                JSONObject place = places.getJSONObject(i);
+                if (place.getInt("rating") == 5) {
+                    countRating5++;
+                }
+                else if (place.getInt("rating") == 4) {
+                    countRating4++;
+                }
+                else if (place.getInt("rating") == 3) {
+                    countRating3++;
+                }
+
+            } catch (Exception ex) {
+                System.out.println("Parsing child exception!");
+            }
         }
+
+        DataPoint[] dataForChart = new DataPoint[3];
+        dataForChart[0] = new DataPoint(3, countRating3);
+        dataForChart[1] = new DataPoint(4, countRating4);
+        dataForChart[2] = new DataPoint(5, countRating5);
 
         BarGraphSeries<DataPoint> series = new BarGraphSeries<>(dataForChart);
 
+        GraphView chart = (GraphView) findViewById(R.id.chart);
         chart.addSeries(series);
     }
 }

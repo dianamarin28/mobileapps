@@ -52,5 +52,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, PlacesActivity.class));
             }
         });
+
+        // go to login
+        Button goToLoginButton = (Button) findViewById(R.id.goToLoginButton);
+        goToLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            }
+        });
     }
 }

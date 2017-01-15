@@ -50,4 +50,12 @@
         android:layout_below="@+id/emailText"
         android:layout_centerHorizontal="true"
         android:text="Send mail!" />
+
+    <Button
+        android:text="Login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonEmail"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/goToLoginButton" />
 </RelativeLayout>

@@ -11,6 +11,14 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import com.example.diana.travelapp.serverUtils.Request;
+import com.example.diana.travelapp.serverUtils.RequestBuilder;
+import com.example.diana.travelapp.serverUtils.RequestTags;
+import com.example.diana.travelapp.serverUtils.ResponseParser;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,18 +27,43 @@ import java.util.Map;
 public class PlacesActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
 
+    public List<String> getDataFromServer() {
+        List<String> placesForList = new ArrayList<>();
+        JSONArray places = Request.readRequest();
+
+        for(int i=0; i<places.length(); i++) {
+            try {
+                JSONObject place = places.getJSONObject(i);
+                placesForList.add(
+                        place.getString("id") + " " +
+                                place.getString("country") + " " +
+                                place.getString("city") + " " +
+                                place.getString("rating")
+                );
+
+            } catch (Exception ex) {
+                System.out.println("Parsing child exception!");
+            }
+        }
+
+        return placesForList;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places);
 
-        // list
-        DBRepo db = new DBRepo(getApplicationContext(), null);
-        Place[] places = db.getAllPlaces();
-        List<String> placesForList = new ArrayList<>();
-        for (Place p : places) {
-            placesForList.add(p.toString());
-        }
+        // LOCAL STORAGE
+//        DBRepo db = new DBRepo(getApplicationContext(), null);
+//        Place[] places = db.getAllPlaces();
+//        List<String> placesForList = new ArrayList<>();
+//        for (Place p : places) {
+//            placesForList.add(p.toString());
+//        }
+
+        // REMOTE STORAGE
+        List<String> placesForList = getDataFromServer();
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, placesForList);
         final ListView placesList = (ListView) findViewById(R.id.placesList);
@@ -64,12 +97,17 @@ public class PlacesActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        DBRepo db = new DBRepo(getApplicationContext(), null);
-        Place[] places = db.getAllPlaces();
-        List<String> placesForList = new ArrayList<>();
-        for(Place p : places) {
-            placesForList.add(p.toString());
-        }
+//        LOCAL STORAGE
+//        DBRepo db = new DBRepo(getApplicationContext(), null);
+//        Place[] places = db.getAllPlaces();
+//        List<String> placesForList = new ArrayList<>();
+//        for(Place p : places) {
+//            placesForList.add(p.toString());
+//        }
+
+//        REMOTE STORAGE
+        List<String> placesForList = getDataFromServer();
+
         this.adapter.clear();
         this.adapter.addAll(placesForList);
     }
