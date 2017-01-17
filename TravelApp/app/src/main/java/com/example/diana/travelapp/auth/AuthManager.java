@@ -3,6 +3,7 @@ package com.example.diana.travelapp.auth;
 import com.example.diana.travelapp.serverUtils.Request;
 import com.example.diana.travelapp.serverUtils.RequestBuilder;
 import com.example.diana.travelapp.serverUtils.RequestTags;
+import com.example.diana.travelapp.serverUtils.ResponseParser;
 
 /**
  * Created by Diana on 1/15/2017.
@@ -28,12 +29,14 @@ public class AuthManager {
 
         Request request = new Request();
         String response = request.makeRequest(URL);
+        ResponseParser responseParser = new ResponseParser(response);
+        String status = responseParser.getStringValue("status");
 
-        if (this.user == null && response.equals("SUCCESS\n")) {
+        if (this.user == null && status.equals("SUCCESS")) {
             User u = new User(username, true);
             this.user = u;
         }
-        if (response.equals("SUCCESS\n")) {
+        if (status.equals("SUCCESS")) {
             return true;
         }
         else {

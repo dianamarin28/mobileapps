@@ -1,6 +1,9 @@
 package com.example.diana.travelapp;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +17,20 @@ import com.example.diana.travelapp.serverUtils.RequestBuilder;
 import com.example.diana.travelapp.serverUtils.RequestTags;
 
 public class PlaceAddActivity extends AppCompatActivity {
+
+    public void sendNotification(View view) {
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("TRAVEL APP")
+                        .setContentText("New destination is now available! Check it out!");
+
+
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(1, mBuilder.build());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +94,7 @@ public class PlaceAddActivity extends AppCompatActivity {
                 if(isSaved != null){
                     Toast toast = Toast.makeText(getApplicationContext(), "Saved!", Toast.LENGTH_LONG);
                     toast.show();
+                    sendNotification(view);
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG);
                     toast.show();

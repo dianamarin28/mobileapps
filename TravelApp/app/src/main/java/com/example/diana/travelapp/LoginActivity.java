@@ -1,5 +1,6 @@
 package com.example.diana.travelapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
                 Toast toast;
                 if (loginStatus) {
                     toast = Toast.makeText(getApplicationContext(), "Welcome!", Toast.LENGTH_LONG);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
                 } else {
                     toast = Toast.makeText(getApplicationContext(), "Error! Recheck credentials!", Toast.LENGTH_LONG);
                 }

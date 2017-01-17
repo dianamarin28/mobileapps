@@ -28,7 +28,7 @@ public class Request {
         String response = request.makeRequest(URL);
         ResponseParser data = new ResponseParser(response);
 
-        JSONArray places = data.getArray("destinations"); //TODO
+        JSONArray places = data.getArray("destinations");
         return places;
     }
 

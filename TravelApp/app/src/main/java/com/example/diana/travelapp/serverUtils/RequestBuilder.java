@@ -13,7 +13,7 @@ public class RequestBuilder {
     }
 
     public RequestBuilder setType(String type) {
-        this.FINAL_URL += type + "/?";
+        this.FINAL_URL += type + "?";
         return this;
     }
 
